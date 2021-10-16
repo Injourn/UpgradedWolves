@@ -1,5 +1,7 @@
 package com.example.upgradedwolves.items;
 
+import java.util.concurrent.Callable;
+
 import com.example.upgradedwolves.UpgradedWolves;
 import com.example.upgradedwolves.entities.plushy.CreeperPlushyModel;
 import com.example.upgradedwolves.entities.plushy.MobPlushyEntity;
@@ -9,6 +11,7 @@ import com.example.upgradedwolves.entities.plushy.ZombiePlushyModel;
 import com.example.upgradedwolves.utils.MobPlushyType;
 
 import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -19,14 +22,21 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.api.distmarker.Dist;
 
 public class MobPlushy extends Item {
     public MobPlushyType plushType;
 
     public MobPlushy(String registryName, MobPlushyType type) {
-        super(new Item.Properties().maxStackSize(1).group(ItemGroup.MISC).setISTER(TilePlushyEntity::new));
+        super(new Item.Properties().maxStackSize(1).group(ItemGroup.MISC).setISTER(() -> tilePlushyISTER()));
         this.setRegistryName(UpgradedWolves.getId(registryName));
         plushType = type;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static Callable<ItemStackTileEntityRenderer> tilePlushyISTER(){
+        return TilePlushyEntity::new;
     }
     
     @Override
@@ -47,6 +57,7 @@ public class MobPlushy extends Item {
         }
         return ActionResult.resultConsume(itemstack);
     }
+    @OnlyIn(Dist.CLIENT)
     public static EntityModel<Entity> getModelByPlushType(MobPlushy plushItem){
         switch(plushItem.plushType){
             case ZOMBIE:
