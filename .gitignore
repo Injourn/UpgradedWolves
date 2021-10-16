@@ -16,7 +16,8 @@ out
 # gradle
 build
 .gradle
-gradle/**
+gradle/*
+!gradle/wrapper
 
 #vscode
 .vscode
