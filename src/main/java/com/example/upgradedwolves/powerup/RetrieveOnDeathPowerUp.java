@@ -3,6 +3,7 @@ package com.example.upgradedwolves.powerup;
 import java.lang.reflect.InvocationTargetException;
 
 import com.example.upgradedwolves.capabilities.IWolfStats;
+import com.example.upgradedwolves.capabilities.WolfStatsEnum;
 import com.example.upgradedwolves.capabilities.WolfStatsHandler;
 
 import net.minecraft.entity.ai.goal.Goal;
@@ -12,6 +13,11 @@ public class RetrieveOnDeathPowerUp extends PowerUp {
 
     public RetrieveOnDeathPowerUp(int levelRequirement) {
         super(levelRequirement, "death_retrieval");
+        this.active = false;
+        this.uLocation = 102;
+        this.vLocation = 182;
+        this.statType = WolfStatsEnum.values()[1];
+        this.defaultPriority = 4;
     }
 
     @Override

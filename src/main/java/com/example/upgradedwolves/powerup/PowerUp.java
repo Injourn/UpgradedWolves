@@ -1,22 +1,17 @@
 package com.example.upgradedwolves.powerup;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 
 import com.example.upgradedwolves.UpgradedWolves;
 import com.example.upgradedwolves.capabilities.IWolfStats;
 import com.example.upgradedwolves.capabilities.WolfStatsEnum;
 import com.example.upgradedwolves.capabilities.WolfStatsHandler;
-import com.google.gson.Gson;
 
 import org.apache.logging.log4j.LogManager;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.passive.WolfEntity;
 
-import net.minecraft.resources.SimpleResource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
@@ -44,9 +39,7 @@ public abstract class PowerUp {
     protected ResourceLocation image;
     protected WolfStatsEnum statType;
     protected int givenLevel;
-    protected int defaultPriority;
-    
-    private PowerUpData POWER_UP_DATA;
+    protected int defaultPriority;        
 
     public PowerUp(int levelRequirement, String resourceLocationName){
         initializePowerUp(levelRequirement, resourceLocationName, null);
@@ -58,27 +51,13 @@ public abstract class PowerUp {
 
     private void initializePowerUp(int levelRequirement, String resourceLocationName,Class<? extends Goal> goal){
         ResourceLocation resourceLocation = UpgradedWolves.getId("powerups/" + resourceLocationName + ".json");
-        try{   
-            SimpleResource iresource = (SimpleResource) Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
-            Gson itemData =  new Gson();
-            POWER_UP_DATA = itemData.fromJson( new InputStreamReader(iresource.getInputStream()),PowerUpData.class);
-            String powerUpName = resourceLocation.getPath().replace("powerups/", "").replace(".json", "");
-            this.name = "powerup." + resourceLocation.getNamespace() + "." + powerUpName + ".name";
-            this.description = "powerup." + resourceLocation.getNamespace() + "." + powerUpName + ".description";
-            this.active = POWER_UP_DATA.active;
-            this.uLocation = POWER_UP_DATA.uLocation;
-            this.vLocation = POWER_UP_DATA.vLocation;
-            this.statType = WolfStatsEnum.values()[POWER_UP_DATA.statType];
-            this.defaultPriority = POWER_UP_DATA.priority;
-            this.effectiveLevel = 0;
+        String powerUpName = resourceLocation.getPath().replace("powerups/", "").replace(".json", "");
+        this.name = "powerup." + resourceLocation.getNamespace() + "." + powerUpName + ".name";
+        this.description = "powerup." + resourceLocation.getNamespace() + "." + powerUpName + ".description";
+        this.effectiveLevel = 0;
 
-            this.relevantGoal = goal;
-            this.levelRequirement = levelRequirement;
-
-        }
-        catch(IOException e){
-            LogManager.getLogger().error("Failed to load powerup: " + resourceLocation.getPath() + '\n' + e.getMessage());
-        }
+        this.relevantGoal = goal;
+        this.levelRequirement = levelRequirement;    
     }
 
     public Goal OnLevelUp(WolfEntity wolf, WolfStatsEnum type, int number){
