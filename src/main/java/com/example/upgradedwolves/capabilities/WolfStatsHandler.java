@@ -467,7 +467,9 @@ public class WolfStatsHandler {
             nbt.putInt("WolfType",instance.getWolfType());
             nbt.putInt("WolfFur",instance.getWolfFur());
             nbt.put("Inventory",instance.getInventory().serializeNBT());
-            nbt.put("RoamPosition",NBTUtil.writeBlockPos(instance.getRoamPoint()));
+            if(instance.getRoamPoint() != null){
+                nbt.put("RoamPosition",NBTUtil.writeBlockPos(instance.getRoamPoint()));
+            }
             return nbt;
         }
 
