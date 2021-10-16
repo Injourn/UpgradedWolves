@@ -1,3 +1,18 @@
+v1.0.0 Full release
+
+Added
++Show Wolf
+
+Removed
+-JSON files
+
+Fixed
+*bugs mentioned in other branches.
+*issue saving null block positions.
+*issue with mods not being able to load on servers
+
+================
+
 v 0.4.1 Scavenger wolf PowerUp
 
 Added
@@ -101,5 +116,3 @@ Fixed
 
 =========
 v 1.1
-
--- Too lazy to document :/
