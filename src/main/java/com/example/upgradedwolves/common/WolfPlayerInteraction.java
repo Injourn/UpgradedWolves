@@ -182,7 +182,8 @@ public class WolfPlayerInteraction {
             if(optGoal.isPresent()){
                 wolf.goalSelector.removeGoal(optGoal.get().getGoal());
             }
-            removeWolfGoal(wolf, WaterAvoidingRandomWalkingGoal.class);
+            if(handler.getWolfType() == 3)
+                removeWolfGoal(wolf, WaterAvoidingRandomWalkingGoal.class);
 
             wolf.setCanPickUpLoot(false);
             for(ItemEntity itementity : wolf.world.getEntitiesWithinAABB(ItemEntity.class, wolf.getBoundingBox().grow(1.0D, 0.0D, 1.0D))) {

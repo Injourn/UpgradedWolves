@@ -41,6 +41,7 @@ public class WolfTossArrowGoal extends CoolDownGoal {
                 List<MonsterEntity> enemies = entityFinder.findWithPredicate(5, 3,enemy -> (!(enemy instanceof IAngerable) || ((IAngerable)enemy).getAttackTarget() != null) && wolf.getEntitySenses().canSee(enemy));
                 if(enemies.size() > 0){
                     target = enemies.get(0);
+                    arrowStackSlot = slot;
                     return true;
                 }
             }
@@ -55,17 +56,18 @@ public class WolfTossArrowGoal extends CoolDownGoal {
 
     @Override
     public boolean shouldContinueExecuting() {
-        if(windUpTicks-- >= 0){
+        if(windUpTicks-- <= 0){
             IWolfStats handler = WolfStatsHandler.getHandler(wolf);
             ItemStack arrowStack = handler.getInventory().getStackInSlot(arrowStackSlot);
             if(arrowStack.getItem() instanceof ArrowItem)
                 attackEntityWithRangedAttack(target, 2 + handler.getWolfStrength(), arrowStack);
             startCoolDown(AbilityEnhancer.minMaxIncrease(wolf, 200, 5, 150));
-            return true;
+            windUpTicks = 30;
+            return false;
         }
-        windUpTicks = 30;
+        
         wolf.rotationYaw += 1;
-        return false;
+        return true;
     }
 
     private void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor,ItemStack arrowStack) {
