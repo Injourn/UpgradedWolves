@@ -5,13 +5,15 @@ import java.util.Random;
 
 import com.example.upgradedwolves.entities.utilities.AbilityEnhancer;
 import com.example.upgradedwolves.entities.utilities.EntityFinder;
+import com.example.upgradedwolves.network.PacketHandler;
+import com.example.upgradedwolves.network.message.CreateParticleForMobMessage;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.IAngerable;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundEvents;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 public class BarkStunGoal extends CoolDownGoal {
     protected final EntityFinder<MonsterEntity> entityFinder;
@@ -44,15 +46,13 @@ public class BarkStunGoal extends CoolDownGoal {
     @Override
     public void startExecuting() {
         wof.playSound(SoundEvents.ENTITY_WOLF_AMBIENT, 20, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.02F + .7F);        
-        for (MonsterEntity mobEntity : enemies) {
-            Random r = new Random();
-            mobEntity.setNoAI(true);
-            for(int i = 0; i < 10; i++)
-                Minecraft.getInstance().world.addParticle(ParticleTypes.FLAME, false, mobEntity.getPosition().getX() + r.nextDouble(), mobEntity.getPosition().getY() + r.nextDouble(), mobEntity.getPosition().getZ() + r.nextDouble(), r.nextDouble()/5, r.nextDouble()/5, r.nextDouble()/5);
+        for (MonsterEntity mobEntity : enemies) {    
+            PacketHandler.instance.send(PacketDistributor.TRACKING_ENTITY.with(() -> wof),new CreateParticleForMobMessage(mobEntity.getEntityId(), ParticleTypes.FLAME, 10));
+            mobEntity.setNoAI(true);            
         }
         startCoolDown();
     }
-    
+
     @Override
     public boolean shouldContinueExecuting() {
         int bonus = AbilityEnhancer.minMaxIncrease(wof, 90, 10, 50);

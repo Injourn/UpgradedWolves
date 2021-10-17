@@ -2,14 +2,16 @@ package com.example.upgradedwolves.entities.goals;
 
 import com.example.upgradedwolves.entities.utilities.AbilityEnhancer;
 import com.example.upgradedwolves.loot_table.LootLoaders;
+import com.example.upgradedwolves.network.PacketHandler;
+import com.example.upgradedwolves.network.message.CreateParticleForMobMessage;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 public class DigForItemGoal extends CoolDownGoal {
     public WolfEntity wolf;
@@ -44,10 +46,8 @@ public class DigForItemGoal extends CoolDownGoal {
     @Override
     public boolean shouldContinueExecuting() {
         if(currentTime++ < timer){
-            wolf.playSound(type.getBlock().getSoundType(null, null, null, null).getPlaceSound(), 0.5F, (1.0F + (wolf.getRNG().nextFloat() - wolf.getRNG().nextFloat()) * 0.2F) * 0.7F);            
-            Minecraft mc = Minecraft.getInstance();
-            if(mc.world != null)
-                mc.world.addParticle(new BlockParticleData(ParticleTypes.BLOCK, type),false, wolf.getPosX(), wolf.getPosY(), wolf.getPosZ(),wolf.getRNG().nextDouble()/5, wolf.getRNG().nextDouble()/5, wolf.getRNG().nextDouble()/5);
+            wolf.playSound(type.getBlock().getSoundType(null, null, null, null).getPlaceSound(), 0.5F, (1.0F + (wolf.getRNG().nextFloat() - wolf.getRNG().nextFloat()) * 0.2F) * 0.7F);
+            PacketHandler.instance.send(PacketDistributor.TRACKING_ENTITY.with(() -> wolf),new CreateParticleForMobMessage(wolf.getEntityId(), new BlockParticleData(ParticleTypes.BLOCK, type), 1));
             return true;
         }
         currentTime = 0;

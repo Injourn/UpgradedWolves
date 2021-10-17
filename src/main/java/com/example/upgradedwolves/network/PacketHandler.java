@@ -1,6 +1,7 @@
 package com.example.upgradedwolves.network;
 
 import com.example.upgradedwolves.UpgradedWolves;
+import com.example.upgradedwolves.network.message.CreateParticleForMobMessage;
 import com.example.upgradedwolves.network.message.IMessage;
 import com.example.upgradedwolves.network.message.MovePlayerMessage;
 import com.example.upgradedwolves.network.message.RenderMessage;
@@ -32,6 +33,7 @@ public class PacketHandler
         register(MovePlayerMessage.class, new MovePlayerMessage());
         register(SpawnLevelUpParticle.class, new SpawnLevelUpParticle());
         register(SyncWolfHandMessage.class, new SyncWolfHandMessage());
+        register(CreateParticleForMobMessage.class, new CreateParticleForMobMessage());
         //register(ItemPacket.class,new ItemPacket(0,0));
     }
 
