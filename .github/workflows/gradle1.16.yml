@@ -61,7 +61,7 @@ jobs:
           file_path: ./build/libs/${{ steps.fname.outputs.result }}.jar
           changelog: ${{ steps.changelog.outputs.log }}
           display_name: ${{ steps.fname.outputs.result }}
-          game_versions: 73242:1.16.5,2:Java 14,68441:Forge
+          game_versions: 70886:1.16.5,2:Java 14,68441:Forge
           release_type: alpha
           relations: modmenu:optionalDependency
       - name: upload artifacts
