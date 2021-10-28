@@ -30,6 +30,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Get ChangeLog
+        id: changelog
+        run: echo "::set-output name=log::$(sed '/===/Q' changelog.txt)"
       - uses: actions/cache@v2
         with: 
           path: |
@@ -41,5 +44,29 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build --stacktrace
+      - uses: actions/github-script@v2
+        id: fname
+        with:
+          result-encoding: string
+          script: |
+            const fs = require("fs")
+            return fs.readdirSync("./build/libs/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0].replace(".jar", "");
+      - name: Upload to curseforge
+        uses: itsmeow/curseforge-upload@v2
+        with:
+          token: ${{ secrets.CFUPLOADKEY }}
+          project_id: 509557
+          game_endpoint: minecraft
+          file_path: ./build/libs/${{ steps.fname.outputs.result }}.jar
+          changelog: ${{ steps.changelog.outputs.log }}
+          display_name: ${{ steps.fname.outputs.result }}
+          game_versions: 73242:1.16.5,2:Java 14,68441:Forge
+          release_type: alpha
+          relations: modmenu:optionalDependency
+      - name: upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Artifacts
+          path: build/libs/
     
