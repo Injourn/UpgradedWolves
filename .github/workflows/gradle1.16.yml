@@ -32,7 +32,12 @@ jobs:
           java-version: 1.8
       - name: Get ChangeLog
         id: changelog
-        run: echo "::set-output name=log::$(sed '/===/Q' changelog.txt)"
+        run: |
+          MY_STRING=$(sed '/===/Q' changelog.txt)
+          MY_STRING="${MY_STRING//'%'/'%25'}"
+          MY_STRING="${MY_STRING//$'\n'/'%0A'}"
+          MY_STRING="${MY_STRING//$'\r'/'%0D'}"
+          echo "::set-output name=log::$MY_STRING"
       - uses: actions/cache@v2
         with: 
           path: |
