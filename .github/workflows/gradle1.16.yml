@@ -33,13 +33,6 @@ jobs:
       - name: Get ChangeLog
         id: changelog
         run: echo "::set-output name=log::$(sed '/===/Q' changelog.txt)"
-      - uses: actions/github-script@v2
-        id: fname
-        with:
-          result-encoding: string
-          script: |
-            const fs = require("fs")
-            return fs.readdirSync("./build/libs/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0].replace(".jar", "");
       - uses: actions/cache@v2
         with: 
           path: |
@@ -52,6 +45,13 @@ jobs:
         run: chmod +x ./gradlew
       - name: Build with Gradle
         run: ./gradlew build --stacktrace
+      - uses: actions/github-script@v2
+        id: fname
+        with:
+          result-encoding: string
+          script: |
+            const fs = require("fs")
+            return fs.readdirSync("./build/libs/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0].replace(".jar", "");
       - name: Upload to curseforge
         uses: itsmeow/curseforge-upload@v2
         with:
