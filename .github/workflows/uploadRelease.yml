@@ -64,7 +64,7 @@ jobs:
           game_endpoint: minecraft
           file_path: ./build/libs/${{ steps.fname.outputs.result }}.jar
           changelog: ${{ steps.changelog.outputs.log }}
-          display_name: ${{ steps.fname.outputs.result }}
+          display_name: ${{ steps.fname.outputs.result }}.jar
           game_versions: 70886:1.16.5,2:Java 14,68441:Forge
           release_type: release
       - name: Create Git Release
