@@ -238,6 +238,7 @@ public class WolfPlayerInteraction {
             wolf.goalSelector.addGoal(6, followOwnerVariableGoal);            
             wolf.goalSelector.addGoal(8, new WolfBiasRoamGoal(wolf, 1.0, 10, 5));
             wolf.goalSelector.addGoal(2, new TugOfWarGaol(wolf));
+            handler.getWolfPersonality().setWolfExpressions(wolf);
             
             handler.handleWolfGoals();          
         }

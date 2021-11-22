@@ -54,6 +54,12 @@
     "powerup.upgradedwolves.share_item.description":"%s share food items with friendly wolves",
     "powerup.upgradedwolves.use_potion.name":"Toss Potion",
     "powerup.upgradedwolves.use_potion.description":"%s will toss potions towards others if necessary",
+    "personality.upgradedwolves.social":"Social",
+    "personality.upgradedwolves.playful":"Playful",
+    "personality.upgradedwolves.passive":"Passive",
+    "personality.upgradedwolves.dominant":"Dominant",
+    "personality.upgradedwolves.affectionate":"Affectionate",
+    "personality.upgradedwolves.aggressive":"Aggressive",
 
 
     "chat.upgradedwolves.level_up":"%s has leveled up %s"

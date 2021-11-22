@@ -3,6 +3,7 @@ package com.example.upgradedwolves.capabilities;
 import java.util.List;
 
 import com.example.upgradedwolves.itemHandler.WolfItemStackHandler;
+import com.example.upgradedwolves.personality.WolfPersonality;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -51,4 +52,6 @@ public interface IWolfStats {
     public void setRoamPoint(BlockPos location);
     public int getWolfFur();
     public void setWolffur(int color);
+    public void setWolfPersonality(WolfPersonality behavior);
+    public WolfPersonality getWolfPersonality();
 }

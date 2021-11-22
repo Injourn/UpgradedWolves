@@ -33,6 +33,7 @@ import com.example.upgradedwolves.init.ModContainers;
 import com.example.upgradedwolves.init.ModEntities;
 import com.example.upgradedwolves.itemHandler.WolfToysHandler;
 import com.example.upgradedwolves.network.PacketHandler;
+import com.example.upgradedwolves.personality.WolfPersonality;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(UpgradedWolves.ModId)
@@ -41,7 +42,7 @@ public class UpgradedWolves
 
     public static final String ModId = "upgradedwolves";
     // Directly reference a log4j logger.    
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
 
     public UpgradedWolves() {
         // Register the setup method for modloading
@@ -75,6 +76,7 @@ public class UpgradedWolves
 
         WolfStatsHandler.register();
         TrainingHandler.register();
+        WolfPersonality.addGoals();
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {

@@ -1,5 +1,7 @@
 package com.example.upgradedwolves.entities.goals;
 
+import java.util.EnumSet;
+
 import com.example.upgradedwolves.capabilities.IWolfStats;
 import com.example.upgradedwolves.capabilities.WolfStatsEnum;
 import com.example.upgradedwolves.capabilities.WolfStatsHandler;
@@ -35,6 +37,7 @@ public class WolfFindAndPickUpItemGoal extends Goal implements IUpdateableGoal{
         this.wolfInventory = handler.getInventory();
         this.unseenMemoryTicks = 10 * handler.getLevel(WolfStatsEnum.Intelligence);
         distance = 12.0D + handler.getDetectionBonus();
+        this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE,Goal.Flag.LOOK));
     }
 
     @Override

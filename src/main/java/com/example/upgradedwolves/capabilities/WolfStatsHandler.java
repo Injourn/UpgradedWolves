@@ -2,6 +2,7 @@ package com.example.upgradedwolves.capabilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -13,6 +14,9 @@ import com.example.upgradedwolves.itemHandler.WolfItemStackHandler;
 import com.example.upgradedwolves.itemHandler.WolfToysHandler;
 import com.example.upgradedwolves.network.PacketHandler;
 import com.example.upgradedwolves.network.message.SpawnLevelUpParticle;
+import com.example.upgradedwolves.personality.Behavior;
+import com.example.upgradedwolves.personality.PersonalitySerializer;
+import com.example.upgradedwolves.personality.WolfPersonality;
 import com.example.upgradedwolves.powerup.PowerUp;
 import com.example.upgradedwolves.powerup.PowerUpList;
 
@@ -51,6 +55,13 @@ public class WolfStatsHandler {
     public static IWolfStats getHandler(WolfEntity entity) {
         IWolfStats stats = entity.getCapability(CAPABILITY_WOLF_STATS, Direction.DOWN).orElse(null);
         stats.setActiveWolf(entity);
+        if(stats.getWolfPersonality() == null){
+            Random rand = new Random();
+            WolfPersonality personality = WolfPersonality.getRandomWolfPersonality();
+            personality.subBehavior = Behavior.values()[rand.nextInt(Behavior.values().length)];
+            stats.setWolfPersonality(personality);
+            stats.getWolfPersonality().setWolfExpressions(entity);
+        }
         return stats;
     }
 
@@ -76,6 +87,7 @@ public class WolfStatsHandler {
         List<Goal> unaddedGoals = new ArrayList<Goal>();
         boolean tugOfWarActive = false;
         boolean deathRetrieval,lootAdder;
+        WolfPersonality personality;
 
         private boolean LevelUpFunction(int level, int xp) {
             return xp > Math.pow(level,1.1) * 4;
@@ -447,7 +459,16 @@ public class WolfStatsHandler {
         public void setWolffur(int color) {
             wolfFur = color;            
         }
+        @Override
+        public void setWolfPersonality(WolfPersonality personality) {
 
+            this.personality = personality;
+        }
+        @Override
+        public WolfPersonality getWolfPersonality() {
+
+            return personality;
+        }
 
     }
 
@@ -466,6 +487,7 @@ public class WolfStatsHandler {
             nbt.putInt("IntelligenceXp", instance.getXp(WolfStatsEnum.Intelligence));
             nbt.putInt("WolfType",instance.getWolfType());
             nbt.putInt("WolfFur",instance.getWolfFur());
+            nbt.put("Personality",PersonalitySerializer.serializeNbt(instance.getWolfPersonality()));
             nbt.put("Inventory",instance.getInventory().serializeNBT());
             if(instance.getRoamPoint() != null){
                 nbt.put("RoamPosition",NBTUtil.writeBlockPos(instance.getRoamPoint()));
@@ -487,6 +509,7 @@ public class WolfStatsHandler {
             instance.setWolffur(next.getInt("WolfFur"));
             instance.getInventory().deserializeNBT(next.getCompound("Inventory"));
             instance.setRoamPoint(NBTUtil.readBlockPos(next.getCompound("RoamPosition")));
+            instance.setWolfPersonality(PersonalitySerializer.deserializeNbt(next.getCompound("Personality")));
             instance.InitLove();
         }
 
