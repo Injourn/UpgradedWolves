@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import com.example.upgradedwolves.UpgradedWolves;
 import com.example.upgradedwolves.capabilities.WolfStatsEnum;
 import com.example.upgradedwolves.personality.expressions.Expressions;
+import com.example.upgradedwolves.personality.expressions.ReciprocalExpression;
 
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -45,6 +46,7 @@ public abstract class WolfPersonality {
     }
     
     public void setWolfExpressions(WolfEntity wolf) {
+        wolf.goalSelector.addGoal(8,new ReciprocalExpression(wolf,subBehavior));
         getExpressions().forEach(x -> assignExpressions(wolf,x));        
     }
 
