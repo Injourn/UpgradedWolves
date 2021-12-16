@@ -107,6 +107,9 @@ public class PlayfulExpression extends Expressions {
                     return goal.getGoal() instanceof Expressions;
                 }).collect(Collectors.toList()).forEach(x -> x.resetTask());
                 Optional<PrioritizedGoal> recipGoal = getWolfReciprocalExpression(wolfPlaymate);
+                if(recipGoal.isEmpty()){
+                    return null;
+                }
                 recipGoal.get().startExecuting();
                 ReciprocalExpression expression = (ReciprocalExpression)recipGoal.get().getGoal();
                 expression.setPartnerExternal(wolf);

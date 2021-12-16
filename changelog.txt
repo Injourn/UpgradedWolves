@@ -1,3 +1,9 @@
+v1.1.1
+Fixed:
+*Rare issue if the the wolf does not have goals properly set.
+
+===============
+
 v1.1.0
 
 Added:
