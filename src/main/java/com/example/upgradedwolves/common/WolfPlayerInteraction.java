@@ -295,7 +295,7 @@ public class WolfPlayerInteraction {
 
     @SubscribeEvent
     public void SetLoot(LootingLevelEvent event){
-        if(event.getDamageSource().getDirectEntity() instanceof ServerPlayer || event.getDamageSource().getDirectEntity() instanceof Wolf){
+        if(event.getDamageSource() != null && (event.getDamageSource().getDirectEntity() instanceof ServerPlayer || event.getDamageSource().getDirectEntity() instanceof Wolf)){
             LivingEntity user = (LivingEntity)event.getDamageSource().getDirectEntity();
             EntityFinder<Wolf> entityFinder = new EntityFinder<Wolf>(user,Wolf.class);
             List<Wolf> wolves = entityFinder.findWithPredicate(10, 10,wolf -> wolf.getOwner() == user);
