@@ -3,6 +3,7 @@ package com.example.upgradedwolves.entities;
 import com.example.upgradedwolves.common.TrainingEventHandler;
 import com.example.upgradedwolves.itemHandler.WolfToysHandler;
 
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -47,7 +48,7 @@ public class FlyingDiskEntity extends WolfChaseableEntity implements IEntityAddi
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {        
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {        
         return ForgeHooks.getEntitySpawnPacket(this);
     }
 

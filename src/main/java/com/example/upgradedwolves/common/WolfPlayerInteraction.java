@@ -187,7 +187,7 @@ public class WolfPlayerInteraction {
             IWolfStats handler = WolfStatsHandler.getHandler(wolf);
             WolfItemStackHandler wolfInventory = handler.getInventory();
 
-            Optional<WrappedGoal> optGoal = wolf.goalSelector.getRunningGoals().filter((goal) -> {
+            Optional<WrappedGoal> optGoal = wolf.goalSelector.getAvailableGoals().stream().filter((goal) -> {
                 return goal.getGoal().getClass() == FollowOwnerGoal.class;
             }).findFirst();
             if(optGoal.isPresent()){
@@ -245,7 +245,7 @@ public class WolfPlayerInteraction {
             Wolf wolf = (Wolf)event.getEntity();
             IWolfStats handler = WolfStatsHandler.getHandler(wolf);
             
-            FollowOwnerVariableGoal followOwnerVariableGoal = new FollowOwnerVariableGoal(wolf, 1.0D, 10.0F, 2.0F, false);           
+            FollowOwnerVariableGoal followOwnerVariableGoal = new FollowOwnerVariableGoal(wolf, 1.0D, 10.0F, 2.0F);           
             wolf.goalSelector.addGoal(6, followOwnerVariableGoal);
             if(handler.getWolfType() == 3)
                 wolf.goalSelector.addGoal(8, new WolfBiasRoamGoal(wolf, 1.0, 10, 5));
@@ -309,7 +309,7 @@ public class WolfPlayerInteraction {
     }
 
     public static Goal getWolfGoal(Wolf wolf, Class<?> goalType){
-        Optional<WrappedGoal> optGoal = wolf.goalSelector.getRunningGoals().filter((goal) -> {
+        Optional<WrappedGoal> optGoal = wolf.goalSelector.getAvailableGoals().stream().filter((goal) -> {
             return goal.getGoal().getClass() == goalType;
         }).findFirst();
         if(optGoal.isPresent()){
@@ -318,7 +318,7 @@ public class WolfPlayerInteraction {
         return null;
     }
     public static void removeWolfGoal(Wolf wolf, Class<?> goalType){
-        Optional<WrappedGoal> optGoal = wolf.goalSelector.getRunningGoals().filter((goal) -> {
+        Optional<WrappedGoal> optGoal = wolf.goalSelector.getAvailableGoals().stream().filter((goal) -> {
             return goal.getGoal().getClass() == goalType;
         }).findFirst();
         if(optGoal.isPresent()){

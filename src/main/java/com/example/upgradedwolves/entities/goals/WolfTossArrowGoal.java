@@ -70,7 +70,7 @@ public class WolfTossArrowGoal extends CoolDownGoal {
     }
 
     private void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor,ItemStack arrowStack) {
-        AbstractArrow abstractarrowentity = ProjectileUtil.getMobArrow(wolf, arrowStack, distanceFactor);
+        AbstractArrow abstractarrowentity = ProjectileUtil.getMobArrow(wolf, arrowStack, distanceFactor, arrowStack);
         double d0 = target.getX() - wolf.getX();
         double d1 = target.getY() - abstractarrowentity.getY();
         double d2 = target.getZ() - wolf.getZ();

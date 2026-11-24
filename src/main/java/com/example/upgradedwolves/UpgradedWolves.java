@@ -133,7 +133,7 @@ public class UpgradedWolves
         return "NONE".equals(version);
     }
     public static ResourceLocation getId(String path){
-        return new ResourceLocation(ModId,path);
+        return ResourceLocation.fromNamespaceAndPath(ModId, path);
     }
     public static String getVersion(){
         Optional<? extends ModContainer> o = ModList.get().getModContainerById(ModId);

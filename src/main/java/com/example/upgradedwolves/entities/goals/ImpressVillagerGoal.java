@@ -22,7 +22,7 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.Util;
 import net.minecraft.server.level.ServerLevel;
 
@@ -31,7 +31,7 @@ public class ImpressVillagerGoal extends CoolDownGoal {
     public final EntityFinder<AbstractVillager> entityFinder;
     public AbstractVillager target;
     int jumpTime;
-    private static final Map<VillagerProfession, ResourceLocation> GIFTS = Util.make(Maps.newHashMap(), (giftMap) -> {
+    private static final Map<VillagerProfession, ResourceKey<LootTable>> GIFTS = Util.make(Maps.newHashMap(), (giftMap) -> {
         giftMap.put(VillagerProfession.ARMORER, BuiltInLootTables.ARMORER_GIFT);
         giftMap.put(VillagerProfession.BUTCHER, BuiltInLootTables.BUTCHER_GIFT);
         giftMap.put(VillagerProfession.CARTOGRAPHER, BuiltInLootTables.CARTOGRAPHER_GIFT);
@@ -95,7 +95,7 @@ public class ImpressVillagerGoal extends CoolDownGoal {
                 Villager villager = (Villager)villagerEntity;
                 VillagerProfession villagerprofession = villager.getVillagerData().getProfession();
                 if (GIFTS.containsKey(villagerprofession)) {
-                    LootTable loottable = villager.level().getServer().getLootData().getLootTable(GIFTS.get(villagerprofession));
+                    LootTable loottable = villager.level().getServer().reloadableRegistries().getLootTable(GIFTS.get(villagerprofession));
                     LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel)villager.level())).withParameter(LootContextParams.ORIGIN, villager.getPosition(1)).withParameter(LootContextParams.THIS_ENTITY, villager).withLuck(villager.getRandom().nextFloat());
                     return loottable.getRandomItems(lootcontext$builder.create(LootContextParamSets.GIFT));
                 } else {

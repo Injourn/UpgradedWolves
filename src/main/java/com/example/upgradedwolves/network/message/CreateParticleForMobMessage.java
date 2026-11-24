@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
@@ -27,7 +28,7 @@ public class CreateParticleForMobMessage implements IMessage<CreateParticleForMo
 
     @Override
     public CreateParticleForMobMessage encode(CreateParticleForMobMessage message, FriendlyByteBuf buffer) {     
-        EntityDataSerializers.PARTICLE.write(buffer, message.particleData);
+        EntityDataSerializers.PARTICLE.codec().encode((RegistryFriendlyByteBuf) buffer, message.particleData);
         buffer.writeInt(message.entityId);
         buffer.writeInt(message.count);
         return message;
@@ -36,7 +37,7 @@ public class CreateParticleForMobMessage implements IMessage<CreateParticleForMo
     @Override
     public CreateParticleForMobMessage decode(FriendlyByteBuf buffer) {
         
-        ParticleOptions particleData = EntityDataSerializers.PARTICLE.read(buffer);
+        ParticleOptions particleData = EntityDataSerializers.PARTICLE.codec().decode((RegistryFriendlyByteBuf) buffer);
         int entityId = buffer.readInt();
         int count = buffer.readInt();        
         return new CreateParticleForMobMessage(entityId,particleData,count);

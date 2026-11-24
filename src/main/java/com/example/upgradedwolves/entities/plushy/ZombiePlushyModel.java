@@ -57,9 +57,8 @@ public class ZombiePlushyModel extends EntityModel<Entity> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer consumer, int p_103113_, int p_103114_,
-			float p_103115_, float p_103116_, float p_103117_, float p_103118_) {
-		this.root().render(poseStack, consumer, p_103113_, p_103114_, p_103115_, p_103116_, p_103117_, p_103118_);
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer consumer, int packedLight, int overlay, int color) {
+		this.root().render(poseStack, consumer, packedLight, overlay, color);
 		
 	}
 

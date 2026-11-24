@@ -37,7 +37,7 @@ public class PowerUpGui {
    private float fade;
    private Font font;
    private CompoundTag nbt;
-   private static ResourceLocation background = new ResourceLocation("minecraft:textures/gui/advancements/backgrounds/stone.png");
+   private static ResourceLocation background = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/advancements/backgrounds/stone.png");
    private static final ResourceLocation POWERUP = UpgradedWolves.getId("gui/wolf_powerup_gui.png");
    public List<PowerUp> powerUps;
    public Wolf wolf;

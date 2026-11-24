@@ -7,6 +7,7 @@ import com.example.upgradedwolves.entities.goals.WolfFindAndPickUpItemGoal;
 import com.example.upgradedwolves.init.ModEntities;
 import com.example.upgradedwolves.itemHandler.WolfToysHandler;
 
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Wolf;
@@ -49,7 +50,7 @@ public class TennisBallEntity extends WolfChaseableEntity implements IEntityAddi
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {        
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {        
         return ForgeHooks.getEntitySpawnPacket(this);
     }
 

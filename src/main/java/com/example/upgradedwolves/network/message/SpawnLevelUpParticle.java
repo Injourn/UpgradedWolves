@@ -56,7 +56,7 @@ public class SpawnLevelUpParticle implements IMessage<SpawnLevelUpParticle> {
                 pt = ParticleTypes.FLAME;
                 break;
                 case Intelligence:
-                pt = ParticleTypes.ENTITY_EFFECT;
+                pt = ParticleTypes.EFFECT;
                 break;
                 case Speed:
                 pt = ParticleTypes.FIREWORK;

@@ -5,8 +5,10 @@ import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 
 public class SyncWolfHandMessage implements IMessage<SyncWolfHandMessage> {    
@@ -26,14 +28,14 @@ public class SyncWolfHandMessage implements IMessage<SyncWolfHandMessage> {
     @Override
     public SyncWolfHandMessage encode(SyncWolfHandMessage message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.wolfId);
-        buffer.writeItemStack(message.item,true);
+        EntityDataSerializers.ITEM_STACK.codec().encode((RegistryFriendlyByteBuf) buffer, message.item);
         return message;
     }
 
     @Override
     public SyncWolfHandMessage decode(FriendlyByteBuf buffer) {
         int id = buffer.readInt();
-        ItemStack item = buffer.readItem();
+        ItemStack item = EntityDataSerializers.ITEM_STACK.codec().decode((RegistryFriendlyByteBuf) buffer);
         return new SyncWolfHandMessage(id,item);
     }
 

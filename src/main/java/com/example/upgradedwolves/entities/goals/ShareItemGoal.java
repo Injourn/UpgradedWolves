@@ -8,6 +8,8 @@ import com.example.upgradedwolves.common.WolfPlayerInteraction;
 import com.example.upgradedwolves.entities.utilities.EntityFinder;
 import com.example.upgradedwolves.itemHandler.WolfItemStackHandler;
 
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +35,7 @@ public class ShareItemGoal extends Goal {
         for (Wolf livingEntity : allyList) {
             int slot = -1;
             if(livingEntity.getHealth() <= 10){
-                slot = wolfItems.getArbitraryItem(item -> item.isEdible() && item.getFoodProperties().isMeat());
+                slot = wolfItems.getArbitraryItemStack(item -> item.has(DataComponents.FOOD) && item.is(ItemTags.MEAT));
             }
             if(slot >= 0){
                 this.slot = slot;
@@ -62,7 +64,7 @@ public class ShareItemGoal extends Goal {
     private boolean wolfCriteria(Wolf wolf){
         WolfItemStackHandler wolfInventory = WolfStatsHandler.getHandler(wolf).getInventory();
         SelfPreservationGoal preservationGoal = (SelfPreservationGoal)WolfPlayerInteraction.getWolfGoal(wolf, SelfPreservationGoal.class);
-        return wolfInventory.getArbitraryItem(item -> item.isEdible() && item.getFoodProperties().isMeat()) < 0 
+        return wolfInventory.getArbitraryItemStack(item -> item.has(DataComponents.FOOD) && item.is(ItemTags.MEAT)) < 0 
         || preservationGoal == null || !preservationGoal.isEating;
     }
 }

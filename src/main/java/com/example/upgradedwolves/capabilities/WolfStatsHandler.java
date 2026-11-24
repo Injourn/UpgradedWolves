@@ -399,13 +399,13 @@ public class WolfStatsHandler {
 
         public void addPendingGoal(int priority, Goal goal){
             if(goal instanceof TargetGoal){                
-                if(currentWolf.targetSelector.getRunningGoals().count() == 0)
+                if(currentWolf.targetSelector.getAvailableGoals().isEmpty())
                     currentWolf.targetSelector.addGoal(priority,goal);
                 else
                     unaddedGoals.add(new WrappedGoal(priority,goal));
             }
             else{
-                if(currentWolf.goalSelector.getRunningGoals().count() == 0)
+                if(currentWolf.goalSelector.getAvailableGoals().isEmpty())
                     currentWolf.goalSelector.addGoal(priority,goal);
                 else
                     unaddedGoals.add(new WrappedGoal(priority,goal));

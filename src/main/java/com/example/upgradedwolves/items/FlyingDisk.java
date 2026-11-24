@@ -31,7 +31,7 @@ public class FlyingDisk extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 72000;
     }
     
@@ -45,7 +45,7 @@ public class FlyingDisk extends Item {
     @Override
     public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
         Player playerIn = (Player)entityLiving;
-        int time = getUseDuration(stack) - timeLeft;
+        int time = getUseDuration(stack, playerIn) - timeLeft;
         float bonus = Math.max(0,Math.min(8,time/3)) / 10.0F;
         worldIn.playSound((Player)null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
         if (!worldIn.isClientSide) {

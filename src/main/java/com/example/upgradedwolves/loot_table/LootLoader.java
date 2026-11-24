@@ -46,7 +46,7 @@ public class LootLoader {
             bound += b.chance;
             if(rand < bound){
                 String itemId = b.items.get(r.nextInt(b.items.size()));
-                Item selectedItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
+                Item selectedItem = ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(itemId));
                 return new ItemStack(selectedItem);
             }
         }

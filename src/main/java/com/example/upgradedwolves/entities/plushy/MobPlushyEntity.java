@@ -10,6 +10,7 @@ import com.example.upgradedwolves.init.ModEntities;
 import com.example.upgradedwolves.itemHandler.WolfToysHandler;
 import com.example.upgradedwolves.items.MobPlushy;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +24,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -124,7 +126,7 @@ public class MobPlushyEntity extends ThrowableProjectile {
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {
         return ForgeHooks.getEntitySpawnPacket(this);
     }
 
@@ -181,7 +183,7 @@ public class MobPlushyEntity extends ThrowableProjectile {
     }
 
     public void setItem(ItemStack stack) {
-        if (plushTypes().contains(stack.getItem()) || stack.hasTag()) {
+        if (plushTypes().contains(stack.getItem()) || stack.getComponents().has(DataComponents.CUSTOM_DATA)) {
            this.getEntityData().set(ITEMSTACK_DATA, Util.make(stack.copy(), (p_213883_0_) -> {
               p_213883_0_.setCount(1);
            }));
@@ -199,20 +201,20 @@ public class MobPlushyEntity extends ThrowableProjectile {
         super.addAdditionalSaveData(compound);
         ItemStack itemstack = this.func_213882_k();
         if (!itemstack.isEmpty()) {
-           compound.put("Item", itemstack.save(new CompoundTag()));
+           compound.put("Item", itemstack.save(this.registryAccess(), new CompoundTag()));
         }
   
     }
   
     public void readAdditional(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        ItemStack itemstack = ItemStack.of(compound.getCompound("Item"));
+        ItemStack itemstack = ItemStack.parseOptional(this.registryAccess(), compound.getCompound("Item"));
         this.setItem(itemstack);
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.getEntityData().define(ITEMSTACK_DATA, ItemStack.EMPTY); 
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(ITEMSTACK_DATA, ItemStack.EMPTY); 
         
     }
 }

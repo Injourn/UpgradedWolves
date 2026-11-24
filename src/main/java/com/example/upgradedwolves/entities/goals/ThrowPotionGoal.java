@@ -14,13 +14,17 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
+import java.util.ArrayList;
+
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ThrowablePotionItem;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 
@@ -72,13 +76,21 @@ public class ThrowPotionGoal extends Goal {
     }
 
     //Gets a potion with a certain effect
-    private int burningQuestion(WolfItemStackHandler wolfItems,MobEffect effectType){
-        return wolfItems.getArbitraryItemStack(x -> x.getItem() instanceof ThrowablePotionItem && remainingWithEffect(PotionUtils.getMobEffects(x),effectType));
+    private int burningQuestion(WolfItemStackHandler wolfItems,Holder<MobEffect> effectType){
+        return wolfItems.getArbitraryItemStack(x -> x.getItem() instanceof ThrowablePotionItem && remainingWithEffect(x,effectType));
     }
 
-    private boolean remainingWithEffect(List<MobEffectInstance> effects, MobEffect effectType){
-        effects.removeIf(y -> y.getEffect() != effectType);
-        return effects.size() > 0;
+    private boolean remainingWithEffect(ItemStack stack, Holder<MobEffect> effectType){
+        if(stack.getItem() instanceof ThrowablePotionItem){
+            PotionContents potioncontents = stack.getComponents().get(DataComponents.POTION_CONTENTS);
+            if(potioncontents != null){
+                List<MobEffectInstance> effects = new ArrayList<MobEffectInstance>();
+                potioncontents.getAllEffects().forEach(effects::add);
+                effects.removeIf(y -> !y.getEffect().is(effectType));
+                return effects.size() > 0;
+            }
+        }
+        return false;
     }
 
     private void WolfThrowPotion(ItemStack potionStack){

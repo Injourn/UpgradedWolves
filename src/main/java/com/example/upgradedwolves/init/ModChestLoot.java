@@ -2,6 +2,7 @@ package com.example.upgradedwolves.init;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import com.example.upgradedwolves.loot_table.init.ModChestLootTable;
 
@@ -12,6 +13,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraft.core.RegistryAccess;
 
 public class ModChestLoot{
 
@@ -23,6 +25,7 @@ public class ModChestLoot{
             new LootTableProvider(
                 packOutput,
                 Collections.EMPTY_SET,
-                List.of(new LootTableProvider.SubProviderEntry(ModChestLootTable::new,LootContextParamSets.CHEST))));
+                List.of(new LootTableProvider.SubProviderEntry(lookup -> new ModChestLootTable(),LootContextParamSets.CHEST)),
+                CompletableFuture.completedFuture(RegistryAccess.EMPTY)));
     }
 }

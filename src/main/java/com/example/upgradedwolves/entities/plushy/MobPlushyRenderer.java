@@ -39,7 +39,7 @@ public class MobPlushyRenderer extends EntityRenderer<MobPlushyEntity> {
         matrixStackIn.pushPose();
         int i = OverlayTexture.NO_OVERLAY;
         VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(entityIn)));
-        model.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, i, 1f, 1f, 1f, 1f);
+        model.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, i);
         matrixStackIn.popPose();
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }

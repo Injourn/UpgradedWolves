@@ -3,8 +3,13 @@ package com.example.upgradedwolves.capabilities;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.example.upgradedwolves.UpgradedWolves;
 
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.IntTag;
@@ -19,6 +24,8 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TrainingHandler {
+    private static final Map<ItemStack, ITraining> TRAINING_HANDLERS = new HashMap<ItemStack, ITraining>();
+
     public static final Capability<ITraining> CAPABILITY_TRAINING = CapabilityManager.get(new CapabilityToken<>() {});
 
     public interface ITraining{
@@ -32,15 +39,17 @@ public class TrainingHandler {
     @Nullable
     public static ITraining getHandler(ItemStack item)
     {
-        return item.getCapability(CAPABILITY_TRAINING, Direction.DOWN).orElse(null);
+        if(item == null)
+            return null;
+        return TRAINING_HANDLERS.get(item);
     }
     @SubscribeEvent
     public void attachCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
         ItemStack stack = (ItemStack)event.getObject();
-        if(stack.isEdible()){
-            FoodProperties next = stack.getItem().getFoodProperties();
-            if(next.isMeat()){
-                event.addCapability(UpgradedWolves.getId("capability_training"), new Provider());
+        if(stack.getComponents().has(DataComponents.FOOD)){
+            if(stack.is(ItemTags.MEAT)){
+                Provider provider = new Provider();
+                TRAINING_HANDLERS.put(stack, provider.getCapability(CAPABILITY_TRAINING, Direction.DOWN).orElse(null));
             }
         }
         

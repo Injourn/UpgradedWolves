@@ -102,13 +102,13 @@ public class PlayfulExpression extends Expressions {
             if(potentialPlaymate instanceof Wolf){
                 Wolf wolfPlaymate = (Wolf)potentialPlaymate;
 
-                List<WrappedGoal> excludeGoals = wolfPlaymate.goalSelector.getRunningGoals().filter((goal) -> {
+                List<WrappedGoal> excludeGoals = wolfPlaymate.goalSelector.getAvailableGoals().stream().filter((goal) -> {
                     return goal.getGoal() instanceof Expressions && isPlaying((Expressions)goal.getGoal());
                 }).toList();
                 if(excludeGoals.size() > 0)
                     return null;
 
-                wolfPlaymate.goalSelector.getRunningGoals().filter((goal) -> {
+                wolfPlaymate.goalSelector.getAvailableGoals().stream().filter((goal) -> {
                     return goal.getGoal() instanceof Expressions;
                 }).toList().forEach(x -> x.stop());
                 Optional<WrappedGoal> recipGoal = getWolfReciprocalExpression(wolfPlaymate);

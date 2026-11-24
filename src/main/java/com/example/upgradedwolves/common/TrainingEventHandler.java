@@ -11,6 +11,8 @@ import com.example.upgradedwolves.network.message.TrainingItemMessage;
 
 import org.apache.logging.log4j.LogManager;
 
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.entity.Entity;
@@ -95,9 +97,9 @@ public class TrainingEventHandler {
     
     public static ItemStack getFoodStack(Player player){
         //Checks if the player is holding food in either hand.
-        if(player.getMainHandItem().isEdible() && player.getMainHandItem().getItem().getFoodProperties().isMeat())
+        if(player.getMainHandItem().has(DataComponents.FOOD) && player.getMainHandItem().is(ItemTags.MEAT))
             return player.getMainHandItem();
-        else if(player.getOffhandItem().isEdible() && player.getOffhandItem().getItem().getFoodProperties().isMeat())
+        else if(player.getOffhandItem().has(DataComponents.FOOD) && player.getOffhandItem().is(ItemTags.MEAT))
             return player.getOffhandItem();
         return null;
     }

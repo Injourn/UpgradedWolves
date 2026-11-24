@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -30,7 +31,7 @@ public class ChestLootModifier extends LootModifier
 {
     private final List<ChestItem> chestItems;
 
-    public static final Supplier<Codec<ChestLootModifier>> CODEC = Suppliers.memoize(() -> RecordCodecBuilder.create(instance -> codecStart(instance).and(ChestItem.CODEC.listOf().fieldOf("additions").forGetter(modifier -> modifier.chestItems)).apply(instance, ChestLootModifier::new)));
+    public static final Supplier<MapCodec<ChestLootModifier>> CODEC = Suppliers.memoize(() -> RecordCodecBuilder.mapCodec(instance -> codecStart(instance).and(ChestItem.CODEC.listOf().fieldOf("additions").forGetter(modifier -> modifier.chestItems)).apply(instance, ChestLootModifier::new)));
 
     /**
      * Constructs a LootModifier.
@@ -83,7 +84,7 @@ public class ChestLootModifier extends LootModifier
 
 
     @Override
-    public Codec<? extends IGlobalLootModifier> codec() {
+    public MapCodec<? extends IGlobalLootModifier> codec() {
         return CODEC.get();
     }
 

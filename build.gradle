@@ -2,7 +2,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.minecraftforge.gradle' version '6.0.35'
 }
 
 version = mod_version
@@ -13,7 +13,7 @@ base {
 }
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
@@ -130,6 +130,13 @@ dependencies {
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
+    // Mojang ships jopt-simple 6.0-alpha-3 whose jar declares Automatic-Module-Name "joptsimple",
+    // but modlauncher 10.x requires module "jopt.simple". Pin 5.0.4 (which derives the module
+    // name "jopt.simple" from its filename) so the client can launch.
+    implementation('net.sf.jopt-simple:jopt-simple:5.0.4') {
+        version { strictly '5.0.4' }
+    }
+
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
@@ -163,6 +170,31 @@ tasks.named('processResources', ProcessResources).configure {
     filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
         expand replaceProperties + [project: project]
     }
+
+    // The mod metadata must live in the same directory as the compiled mod classes for
+    // the dev-time mod file to be discovered as a valid mod (FML scans the directory that
+    // contains META-INF/mods.toml for .class files). Copy the metadata into the compiled
+    // classes output so the dev runtime has a single mod file with metadata + implementation.
+    exclude 'META-INF/mods.toml'
+}
+
+// Fuse the mod metadata into the compiled classes output directory so the dev-time
+// mod file (the one directory on the runtime classpath that contains META-INF/mods.toml)
+// contains both the metadata and the compiled mod classes.
+tasks.register('fuseModsToml', Copy) {
+    from file('src/main/resources/META-INF/mods.toml')
+    into file('build/classes/java/main/META-INF')
+    expand([
+        mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+        mod_authors: mod_authors, mod_description: mod_description,
+        minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+        forge_version: forge_version, forge_version_range: forge_version_range,
+        loader_version_range: loader_version_range,
+    ])
+}
+
+tasks.named('classes') {
+    dependsOn tasks.named('fuseModsToml')
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

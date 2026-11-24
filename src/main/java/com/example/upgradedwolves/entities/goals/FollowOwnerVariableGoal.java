@@ -6,7 +6,7 @@ import com.example.upgradedwolves.common.WolfPlayerInteraction;
 
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,9 +22,8 @@ public class FollowOwnerVariableGoal extends FollowOwnerGoal{
     float dist;
     PathNavigation navigator;
 
-    public FollowOwnerVariableGoal(TamableAnimal tameable, double speed, float minDist, float maxDist,
-            boolean teleportToLeaves) {
-        super(tameable, speed, minDist, maxDist, teleportToLeaves);
+    public FollowOwnerVariableGoal(TamableAnimal tameable, double speed, float minDist, float maxDist) {
+        super(tameable, speed, minDist, maxDist);
         this.tameable = tameable;
         this.dist = minDist;
         this.navigator = tameable.getNavigation();
@@ -93,8 +92,8 @@ public class FollowOwnerVariableGoal extends FollowOwnerGoal{
     }
     private boolean isTeleportFriendlyBlock(BlockPos pos) {
         Level world = tameable.level();
-        BlockPathTypes blockpathtypes = WalkNodeEvaluator.getBlockPathTypeStatic(world, pos.mutable());
-        if (blockpathtypes != BlockPathTypes.WALKABLE) {
+        PathType blockpathtypes = WalkNodeEvaluator.getPathTypeStatic(tameable, pos);
+        if (blockpathtypes != PathType.WALKABLE) {
            return false;
         } else {
            BlockState blockstate = world.getBlockState(pos);
