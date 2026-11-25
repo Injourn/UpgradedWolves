@@ -193,8 +193,18 @@ tasks.register('fuseModsToml', Copy) {
     ])
 }
 
+// Fuse the mod pack metadata (pack.mcmeta) into the compiled classes output directory
+// so the dev-time mod file (the directory on the runtime classpath that contains
+// META-INF/mods.toml) also contains the resource pack metadata (pack.mcmeta) needed
+// for a valid resource pack / PackInfo.
+tasks.register('fusePackMetadata', Copy) {
+    from file('src/main/resources/pack.mcmeta')
+    into file('build/classes/java/main')
+}
+
 tasks.named('classes') {
     dependsOn tasks.named('fuseModsToml')
+    dependsOn tasks.named('fusePackMetadata')
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
